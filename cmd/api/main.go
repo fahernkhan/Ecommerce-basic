@@ -2,9 +2,9 @@ package main
 
 import (
 	"Ecommerce-basic/apps/auth"
+	"Ecommerce-basic/apps/transaction"
 
 	"Ecommerce-basic/apps/product"
-	//"Ecommerce-basic/apps/transaction"
 	"Ecommerce-basic/external/database"
 	"Ecommerce-basic/infra/gin"
 	"Ecommerce-basic/internal"
@@ -43,7 +43,7 @@ func main() {
 	// Inisialisasi modul aplikasi
 	auth.Init(router, db)
 	product.Init(router, db)
-	//transaction.Init(router, db)
+	transaction.Init(router, db)
 
 	// Jalankan server
 	port := config.Cfg.App.Port

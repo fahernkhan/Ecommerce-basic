@@ -39,3 +39,7 @@ CREATE TABLE transactions
     created_at       TIMESTAMP   DEFAULT NOW(),
     updated_at       TIMESTAMP   DEFAULT NOW()
 );
+
+-- CHECKING TRANSACTIONS
+SELECT * FROM transactions as t
+JOIN auth AS a ON a.public_id = t.user_public_id
