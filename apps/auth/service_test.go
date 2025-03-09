@@ -33,7 +33,7 @@ func init() {
 
 func TestRegister_Success(t *testing.T) {
 	req := RegisterRequestPayload{
-		Email:    fmt.Sprintf("%v@noobee.id", uuid.NewString()),
+		Email:    fmt.Sprintf("%v@gmail.com", uuid.NewString()),
 		Password: "mysecretpassword",
 	}
 	err := svc.register(context.Background(), req)
@@ -42,7 +42,7 @@ func TestRegister_Success(t *testing.T) {
 func TestRegister_Fail(t *testing.T) {
 	t.Run("error email already used", func(t *testing.T) {
 		// preparation for duplicate email
-		email := fmt.Sprintf("%v@noobee.id", uuid.NewString())
+		email := fmt.Sprintf("%v@gmail.com", uuid.NewString())
 		req := RegisterRequestPayload{
 			Email:    email,
 			Password: "mysecretpassword",
@@ -59,7 +59,7 @@ func TestRegister_Fail(t *testing.T) {
 }
 
 func TestLogin_Success(t *testing.T) {
-	email := fmt.Sprintf("%v@noobee.id", uuid.NewString())
+	email := fmt.Sprintf("%v@gmail.com", uuid.NewString())
 	pass := "mysecretpassword"
 	req := RegisterRequestPayload{
 		Email:    email,

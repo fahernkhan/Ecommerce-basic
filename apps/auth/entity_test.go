@@ -12,7 +12,7 @@ import (
 func TestValidateAuthEntity(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		authEntity := AuthEntity{
-			Email:    "reyhan@noobee.id",
+			Email:    "fathur@gmail.com",
 			Password: "mysecretpassword",
 		}
 
@@ -33,7 +33,7 @@ func TestValidateAuthEntity(t *testing.T) {
 
 	t.Run("email is invalid", func(t *testing.T) {
 		authEntity := AuthEntity{
-			Email:    "reyhannoobee.id",
+			Email:    "fathur.id",
 			Password: "mysecretpassword",
 		}
 
@@ -43,7 +43,7 @@ func TestValidateAuthEntity(t *testing.T) {
 	})
 	t.Run("password is required", func(t *testing.T) {
 		authEntity := AuthEntity{
-			Email:    "reyhan@noobee.id",
+			Email:    "reyhan@gmail.com",
 			Password: "",
 		}
 
@@ -54,7 +54,7 @@ func TestValidateAuthEntity(t *testing.T) {
 
 	t.Run("password must have minimum 6 character", func(t *testing.T) {
 		authEntity := AuthEntity{
-			Email:    "reyhan@noobee.id",
+			Email:    "reyhan@gmail.com",
 			Password: "pass",
 		}
 
@@ -67,7 +67,7 @@ func TestValidateAuthEntity(t *testing.T) {
 func TestEncryptPassword(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		authEntity := AuthEntity{
-			Email:    "reyhan@noobee.id",
+			Email:    "reyhan@gmail.com",
 			Password: "mysecretpassword",
 		}
 
