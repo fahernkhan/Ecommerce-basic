@@ -2,9 +2,8 @@ package main
 
 import (
 	"Ecommerce-basic/apps/auth"
-	"Ecommerce-basic/apps/transaction"
-
 	"Ecommerce-basic/apps/product"
+	"Ecommerce-basic/apps/transaction"
 	"Ecommerce-basic/external/database"
 	"Ecommerce-basic/infra/gin"
 	"Ecommerce-basic/internal"
@@ -18,17 +17,13 @@ func main() {
 	// Load konfigurasi aplikasi
 	filename := "cmd/api/config.yaml"
 	if err := config.LoadConfig(filename); err != nil {
-		panic(err)
+		log.Fatalf("Failed to load config: %v", err)
 	}
 
 	// Koneksi ke database
 	db, err := database.ConnectPostgres(config.Cfg.DB)
 	if err != nil {
-		panic(err)
-	}
-
-	if db != nil {
-		log.Println("db connected")
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
 	// Gunakan semua core CPU yang tersedia untuk multi-threading
@@ -48,5 +43,7 @@ func main() {
 	// Jalankan server
 	port := config.Cfg.App.Port
 	log.Printf("Starting server on %s", port)
-	router.Run(port)
+	if err := router.Run(port); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }

@@ -8,13 +8,13 @@ app:
     jwt_secret: iniAdalahSecretToken
 
 db:
-host: ${{Postgres.PGHOST}}
-  port: ${{Postgres.PGPORT}}
-  name: ${{Postgres.PGDATABASE}}
-  user: ${{Postgres.PGUSER}}
-  password: ${{Postgres.PGPASSWORD}}
+  host: ${PGHOST}
+  port: ${PGPORT}
+  name: ${PGDATABASE}
+  user: ${PGUSER}
+  password: ${PGPASSWORD}
   connection_pool:
     max_idle_connection: 10
     max_open_connection: 30
-    max_lifetime_connection: 60 #second
-    max_idletime_connection: 60 #second
+    max_lifetime_connection: 60 # second
+    max_idletime_connection: 60 # second
