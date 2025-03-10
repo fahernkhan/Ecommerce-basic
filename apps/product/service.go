@@ -37,19 +37,13 @@ func (s service) CreateProduct(ctx context.Context, req CreateProductRequestPayl
 		return
 	}
 
-	// Validasi keunikan di service
+	// Validasi keunikan nama produk
 	existingProduct, err := s.repo.GetProductByName(ctx, productEntity.Name)
-	if err != nil {
-		if err == response.ErrNotFound {
-			//Product not found, so it is valid to create a new one.
-		} else {
-			return err //return other errors
-		}
-
-	} else {
-		if existingProduct.Id != 0 {
-			return response.ErrProductAlreadyExists
-		}
+	if err != nil && err != response.ErrNotFound {
+		return
+	}
+	if existingProduct.Id != 0 {
+		return response.ErrProductAlreadyExists
 	}
 
 	if err = s.repo.CreateProduct(ctx, productEntity); err != nil {
@@ -76,25 +70,27 @@ func (s service) CreateProduct(ctx context.Context, req CreateProductRequestPayl
 
 func (s service) ListProducts(ctx context.Context, req ListProductRequestPayload) (products []Product, err error) {
 	pagination := NewProductPaginationFromListProductRequest(req)
+	log.Log.Infof(ctx, "Fetching products with pagination: %+v", pagination)
 
 	products, err = s.repo.GetAllProductsWithPaginationCursor(ctx, pagination)
 	if err != nil {
+		log.Log.Errorf(ctx, "Failed to fetch products: %v", err)
 		if err == response.ErrNotFound {
 			return []Product{}, nil
 		}
 		return
-
 	}
 
-	if len(products) == 0 {
-		return []Product{}, nil
-	}
+	log.Log.Infof(ctx, "Fetched %d products", len(products))
 	return
 }
 
 func (s service) ProductDetail(ctx context.Context, sku string) (model Product, err error) {
 	model, err = s.repo.GetProductBySKU(ctx, sku)
 	if err != nil {
+		if err == response.ErrNotFound {
+			return Product{}, response.ErrNotFound
+		}
 		return
 	}
 	return
