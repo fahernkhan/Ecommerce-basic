@@ -225,9 +225,9 @@ Jika ingin berkontribusi, silakan ikuti langkah berikut:
 Proyek ini dilisensikan di bawah **MIT License**. Lihat file LICENSE untuk detail lebih lanjut.
 
 ## Kontak
-- **Nama**: [Nama Anda]
-- **Email**: [email@example.com]
-- **GitHub**: [username]
+- **Nama**: [Fathur]
+- **Email**: [fathurrahman123@gmail.com]
+- **GitHub**: [fahernkhan]
 
 Selamat Menggunakan **Ecommerce Basic API**! 🚀
 

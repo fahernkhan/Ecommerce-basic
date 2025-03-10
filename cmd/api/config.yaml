@@ -8,11 +8,11 @@ app:
     jwt_secret: iniAdalahSecretToken
 
 db:
-  host: localhost
-  port: 5432
-  name: Ecommerce-basic
-  user: postgres
-  password: password
+host: ${{Postgres.PGHOST}}
+  port: ${{Postgres.PGPORT}}
+  name: ${{Postgres.PGDATABASE}}
+  user: ${{Postgres.PGUSER}}
+  password: ${{Postgres.PGPASSWORD}}
   connection_pool:
     max_idle_connection: 10
     max_open_connection: 30
