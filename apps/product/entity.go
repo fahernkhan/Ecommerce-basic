@@ -2,19 +2,27 @@ package product
 
 import (
 	"Ecommerce-basic/infra/response"
+	"context"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type Product struct {
-	Id        int       `db:"id"`
-	SKU       string    `db:"sku"`
-	Name      string    `db:"name"`
-	Stock     int16     `db:"stock"`
-	Price     int       `db:"price"`
-	CreatedAt time.Time `db:"created_at"`
-	UpdatedAt time.Time `db:"updated_at"`
+	Id        int        `db:"id"`
+	SKU       string     `db:"sku"`
+	Name      string     `db:"name"`
+	Stock     int16      `db:"stock"`
+	Price     int        `db:"price"`
+	CreatedAt time.Time  `db:"created_at"`
+	UpdatedAt time.Time  `db:"updated_at"`
+	DeletedAt *time.Time `db:"deleted_at"` // Soft delete
+}
+
+type UpdateProductRequestPayload struct {
+	Name  string `json:"name"`
+	Stock int16  `json:"stock"`
+	Price int    `json:"price"`
 }
 
 type ProductPagination struct {
@@ -63,12 +71,14 @@ func (p Product) ValidateName() (err error) {
 	}
 	return
 }
+
 func (p Product) ValidateStock() (err error) {
 	if p.Stock <= 0 {
 		return response.ErrStockInvalid
 	}
 	return
 }
+
 func (p Product) ValidatePrice() (err error) {
 	if p.Price <= 0 {
 		return response.ErrPriceInvalid
@@ -76,25 +86,17 @@ func (p Product) ValidatePrice() (err error) {
 	return
 }
 
-// to avoid cycling dependency
-// we should comment this method
-// func (p Product) ToProductListResponse() ProductListResponse {
-// 	return ProductListResponse{
-// 		Id:    p.Id,
-// 		SKU:   p.SKU,
-// 		Name:  p.Name,
-// 		Stock: p.Stock,
-// 		Price: p.Price,
-// 	}
-// }
-// func (p Product) ToProductDetailResponse() ProductDetailResponse {
-// 	return ProductDetailResponse{
-// 		Id:        p.Id,
-// 		SKU:       p.SKU,
-// 		Name:      p.Name,
-// 		Stock:     p.Stock,
-// 		Price:     p.Price,
-// 		CreatedAt: p.CreatedAt,
-// 		UpdatedAt: p.UpdatedAt,
-// 	}
-// }
+func (p Product) IsDeleted() bool {
+	return p.DeletedAt != nil
+}
+
+func (p Product) ValidateUnique(ctx context.Context, repo Repository) error {
+	existingProduct, err := repo.GetProductByName(ctx, p.Name)
+	if err != nil && err != response.ErrNotFound {
+		return err
+	}
+	if existingProduct.Id != 0 && existingProduct.Id != p.Id {
+		return response.ErrProductAlreadyExists
+	}
+	return nil
+}

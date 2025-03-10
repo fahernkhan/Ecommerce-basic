@@ -1,6 +1,8 @@
 package product
 
-import "time"
+import (
+	"time"
+)
 
 type ProductListResponse struct {
 	Id    int    `json:"id"`

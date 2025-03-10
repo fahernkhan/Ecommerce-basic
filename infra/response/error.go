@@ -23,10 +23,11 @@ var (
 	ErrPasswordNotMatch      = errors.New("password not match")
 
 	// products
-	ErrProductRequired = errors.New("product is required")
-	ErrProductInvalid  = errors.New("product must have minimum 4 character")
-	ErrStockInvalid    = errors.New("stock must be greater than 0")
-	ErrPriceInvalid    = errors.New("price must be greater than 0")
+	ErrProductRequired      = errors.New("product is required")
+	ErrProductInvalid       = errors.New("product must have minimum 4 character")
+	ErrStockInvalid         = errors.New("stock must be greater than 0")
+	ErrPriceInvalid         = errors.New("price must be greater than 0")
+	ErrProductAlreadyExists = errors.New("product already exists")
 
 	// transactions
 	ErrAmountInvalid          = errors.New("invalid amount")
@@ -70,6 +71,7 @@ var (
 	ErrorStockInvalid          = NewError(ErrStockInvalid.Error(), "40007", http.StatusBadRequest)
 	ErrorPriceInvalid          = NewError(ErrPriceInvalid.Error(), "40008", http.StatusBadRequest)
 	ErrorInvalidAmount         = NewError(ErrAmountInvalid.Error(), "40009", http.StatusBadRequest)
+	ErrorProductAlreadyExists  = NewError(ErrProductAlreadyExists.Error(), "40902", http.StatusConflict)
 
 	ErrorAuthIsNotExists  = NewError(ErrAuthIsNotExists.Error(), "40401", http.StatusNotFound)
 	ErrorEmailAlreadyUsed = NewError(ErrEmailAlreadyUsed.Error(), "40901", http.StatusConflict)
@@ -88,5 +90,6 @@ var (
 		ErrPasswordNotMatch.Error():      ErrorPasswordNotMatch,
 		ErrUnauthorized.Error():          ErrorUnauthorized,
 		ErrForbiddenAccess.Error():       ErrorForbiddenAccess,
+		ErrProductAlreadyExists.Error():  ErrorProductAlreadyExists,
 	}
 )
