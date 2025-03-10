@@ -112,8 +112,8 @@ func (r repository) UpdateProduct(ctx context.Context, model Product) (err error
 func (r repository) SoftDeleteProduct(ctx context.Context, id int) error {
 	query := `
 		UPDATE products
-		SET deleted_at=:deleted_at
-		WHERE id=:id AND deleted_at IS NULL
+		SET deleted_at = :deleted_at
+		WHERE id = :id AND deleted_at IS NULL
 	`
 
 	deletedAt := time.Now()
@@ -122,6 +122,7 @@ func (r repository) SoftDeleteProduct(ctx context.Context, id int) error {
 		"id":         id,
 		"deleted_at": deletedAt,
 	})
+
 	return err
 }
 
