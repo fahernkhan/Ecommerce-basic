@@ -22,6 +22,9 @@ type TransactionDBRepository interface {
 type TransactionRepository interface {
 	CreateTransactionWithTx(ctx context.Context, tx *sqlx.Tx, trx Transaction) (err error)
 	GetTransactionsByUserPublicId(ctx context.Context, userPublicId string) (trxs []Transaction, err error)
+	GetTransactionById(ctx context.Context, trxId int) (trx Transaction, err error)                     // Method baru
+	UpdateTransactionStatusWithTx(ctx context.Context, tx *sqlx.Tx, trx Transaction) (err error)        // Method baru
+	GetTransactionsByProductSku(ctx context.Context, productSKU string) (trxs []Transaction, err error) // Method baru
 }
 type ProductRepository interface {
 	GetProductBySku(ctx context.Context, productSKU string) (product Product, err error)
@@ -101,6 +104,56 @@ func (s service) TransactionHistories(ctx context.Context, userPublicId string) 
 			return trxs, nil
 		}
 
+		return
+	}
+
+	if len(trxs) == 0 {
+		trxs = []Transaction{}
+		return trxs, nil
+	}
+	return
+}
+
+// method untuk mengupdate status transaksi:
+func (s service) UpdateTransactionStatus(ctx context.Context, trxId int, newStatus TransactionStatus) (err error) {
+	// Mulai transaksi database
+	tx, err := s.repo.Begin(ctx)
+	if err != nil {
+		return
+	}
+
+	defer s.repo.Rollback(ctx, tx)
+
+	// Dapatkan transaksi berdasarkan ID
+	trx, err := s.repo.GetTransactionById(ctx, trxId)
+	if err != nil {
+		return
+	}
+
+	// Update status transaksi
+	trx.UpdateStatus(newStatus)
+
+	// Simpan perubahan ke database
+	if err = s.repo.UpdateTransactionStatusWithTx(ctx, tx, trx); err != nil {
+		return
+	}
+
+	// Commit transaksi
+	if err = s.repo.Commit(ctx, tx); err != nil {
+		return
+	}
+
+	return
+}
+
+// method untuk mendapatkan riwayat transaksi
+func (s service) GetTransactionHistoriesByProduct(ctx context.Context, productSKU string) (trxs []Transaction, err error) {
+	trxs, err = s.repo.GetTransactionsByProductSku(ctx, productSKU)
+	if err != nil {
+		if err == response.ErrNotFound {
+			trxs = []Transaction{}
+			return trxs, nil
+		}
 		return
 	}
 

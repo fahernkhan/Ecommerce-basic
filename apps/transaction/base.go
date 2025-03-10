@@ -19,5 +19,7 @@ func Init(router *gin.Engine, db *sqlx.DB) {
 		// route dibawahnya akan menggunakan middleware tersebut
 		trxRoute.POST("/checkout", handler.CreateTransaction)
 		trxRoute.GET("/user/histories", handler.GetTransactionByUser)
+		trxRoute.PUT("/status", handler.UpdateTransactionStatus)
+		trxRoute.GET("/product/:sku/histories", handler.GetTransactionHistoriesByProduct)
 	}
 }

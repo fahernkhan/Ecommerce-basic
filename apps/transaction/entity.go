@@ -135,6 +135,12 @@ func (t Transaction) GetStatus() string {
 	return status
 }
 
+// mengubah status transaksi
+func (t *Transaction) UpdateStatus(newStatus TransactionStatus) {
+	t.Status = newStatus
+	t.UpdatedAt = time.Now()
+}
+
 func (t Transaction) ToTransactionHistoryResponse() TransactionHisotryResponse {
 	product, err := t.GetProduct()
 	if err != nil {

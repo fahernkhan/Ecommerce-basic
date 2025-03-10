@@ -38,3 +38,23 @@ func TestCreateTransaction(t *testing.T) {
 		require.Nil(t, err)
 	})
 }
+
+func TestUpdateTransactionStatus(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		trxId := 1
+		newStatus := TransactionStatus_Progress
+
+		err := svc.UpdateTransactionStatus(context.Background(), trxId, newStatus)
+		require.Nil(t, err)
+	})
+}
+
+func TestGetTransactionHistoriesByProduct(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		productSKU := "a98dcf06-7b4b-4f33-a6d2-20738bb8081b"
+
+		trxs, err := svc.GetTransactionHistoriesByProduct(context.Background(), productSKU)
+		require.Nil(t, err)
+		require.NotEmpty(t, trxs)
+	})
+}

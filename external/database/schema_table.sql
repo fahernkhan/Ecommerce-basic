@@ -20,8 +20,9 @@ CREATE TABLE products (
     price INT NOT NULL DEFAULT 0,
     stock INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
-)
+    updated_at TIMESTAMP DEFAULT NOW(),
+    deleted_at TIMESTAMP DEFAULT NOW()
+);
 
 -- TABLE TRANSACTIONS
 CREATE TABLE transactions
