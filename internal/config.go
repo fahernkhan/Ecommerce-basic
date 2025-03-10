@@ -42,7 +42,25 @@ var Cfg Config
 func LoadConfig(filename string) error {
 	viper.SetConfigFile(filename)
 	viper.SetConfigType("yaml")
-	viper.AutomaticEnv() // Ambil environment variable jika ada
+
+	// Bind environment variables agar bisa digunakan
+	viper.AutomaticEnv()
+
+	// Secara eksplisit bind environment variable
+	envVars := map[string]string{
+		"app.encryption.jwt_secret": "JWT_SECRET",
+		"db.host":                   "PGHOST",
+		"db.port":                   "PGPORT",
+		"db.user":                   "PGUSER",
+		"db.password":               "PGPASSWORD",
+		"db.name":                   "PGDATABASE",
+	}
+
+	for key, envVar := range envVars {
+		if err := viper.BindEnv(key, envVar); err != nil {
+			return fmt.Errorf("error binding env %s: %w", envVar, err)
+		}
+	}
 
 	// Baca file konfigurasi
 	if err := viper.ReadInConfig(); err != nil {
