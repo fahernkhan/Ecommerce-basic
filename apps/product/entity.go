@@ -2,7 +2,6 @@ package product
 
 import (
 	"Ecommerce-basic/infra/response"
-	"context"
 	"time"
 
 	"github.com/google/uuid"
@@ -88,15 +87,4 @@ func (p Product) ValidatePrice() (err error) {
 
 func (p Product) IsDeleted() bool {
 	return p.DeletedAt != nil
-}
-
-func (p Product) ValidateUnique(ctx context.Context, repo Repository) error {
-	existingProduct, err := repo.GetProductByName(ctx, p.Name)
-	if err != nil && err != response.ErrNotFound {
-		return err
-	}
-	if existingProduct.Id != 0 && existingProduct.Id != p.Id {
-		return response.ErrProductAlreadyExists
-	}
-	return nil
 }

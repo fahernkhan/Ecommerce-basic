@@ -37,12 +37,42 @@ func (s service) CreateProduct(ctx context.Context, req CreateProductRequestPayl
 		return
 	}
 
+	// Validasi keunikan di service
+	existingProduct, err := s.repo.GetProductByName(ctx, productEntity.Name)
+	if err != nil {
+		if err == response.ErrNotFound {
+			//Product not found, so it is valid to create a new one.
+		} else {
+			return err //return other errors
+		}
+
+	} else {
+		if existingProduct.Id != 0 {
+			return response.ErrProductAlreadyExists
+		}
+	}
+
 	if err = s.repo.CreateProduct(ctx, productEntity); err != nil {
 		return
 	}
 
 	return
 }
+
+//func (s service) CreateProduct(ctx context.Context, req CreateProductRequestPayload) (err error) {
+//	productEntity := NewProductFromCreateProductRequest(req)
+//
+//	if err = productEntity.Validate(); err != nil {
+//		log.Log.Errorf(ctx, "[CreateProduct, Validate] with error detail %v", err.Error())
+//		return
+//	}
+//
+//	if err = s.repo.CreateProduct(ctx, productEntity); err != nil {
+//		return
+//	}
+//
+//	return
+//}
 
 func (s service) ListProducts(ctx context.Context, req ListProductRequestPayload) (products []Product, err error) {
 	pagination := NewProductPaginationFromListProductRequest(req)
@@ -85,12 +115,44 @@ func (s service) UpdateProduct(ctx context.Context, id int, req UpdateProductReq
 		return
 	}
 
-	if err = product.ValidateUnique(ctx, s.repo); err != nil {
-		return
+	// Validasi keunikan di service
+	existingProduct, err := s.repo.GetProductByName(ctx, product.Name)
+	if err != nil {
+		if err == response.ErrNotFound {
+			//product not found, so it is valid to update the current product.
+		} else {
+			return err //return other errors
+		}
+	} else {
+		if existingProduct.Id != 0 && existingProduct.Id != product.Id {
+			return response.ErrProductAlreadyExists
+		}
 	}
 
 	return s.repo.UpdateProduct(ctx, product)
 }
+
+//func (s service) UpdateProduct(ctx context.Context, id int, req UpdateProductRequestPayload) (err error) {
+//	product, err := s.repo.GetProductByID(ctx, id)
+//	if err != nil {
+//		return
+//	}
+//
+//	product.Name = req.Name
+//	product.Stock = req.Stock
+//	product.Price = req.Price
+//	product.UpdatedAt = time.Now()
+//
+//	if err = product.Validate(); err != nil {
+//		return
+//	}
+//
+//	if err = product.ValidateUnique(ctx, s.repo); err != nil {
+//		return
+//	}
+//
+//	return s.repo.UpdateProduct(ctx, product)
+//}
 
 func (s service) DeleteProduct(ctx context.Context, id int) (err error) {
 	return s.repo.SoftDeleteProduct(ctx, id)
