@@ -109,7 +109,7 @@ func (r repository) UpdateProduct(ctx context.Context, model Product) (err error
 	return
 }
 
-func (r repository) SoftDeleteProduct(ctx context.Context, id int) (err error) {
+func (r repository) SoftDeleteProduct(ctx context.Context, id int) error {
 	query := `
 		UPDATE products
 		SET deleted_at=:deleted_at
@@ -117,11 +117,12 @@ func (r repository) SoftDeleteProduct(ctx context.Context, id int) (err error) {
 	`
 
 	deletedAt := time.Now()
-	_, err = r.db.ExecContext(ctx, query, map[string]interface{}{
+
+	_, err := r.db.NamedExecContext(ctx, query, map[string]interface{}{
 		"id":         id,
 		"deleted_at": deletedAt,
 	})
-	return
+	return err
 }
 
 func (r repository) SearchProducts(ctx context.Context, keyword string, pagination ProductPagination) (products []Product, err error) {
