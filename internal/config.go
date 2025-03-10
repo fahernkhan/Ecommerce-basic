@@ -56,6 +56,7 @@ func LoadConfig(filename string) error {
 		"db.name":                   "PGDATABASE",
 	}
 
+	// Loop untuk bind environment variables
 	for key, envVar := range envVars {
 		if err := viper.BindEnv(key, envVar); err != nil {
 			return fmt.Errorf("error binding env %s: %w", envVar, err)
@@ -72,6 +73,27 @@ func LoadConfig(filename string) error {
 		return fmt.Errorf("error unmarshaling config: %w", err)
 	}
 
-	fmt.Printf("Config loaded: %+v\n", Cfg) // Debugging log
+	// Menampilkan konfigurasi yang telah dimuat dengan lebih rinci
+	fmt.Println("=== Loaded Configuration ===")
+	// Cetak AppConfig
+	fmt.Printf("App Name: %s\n", Cfg.App.Name)
+	fmt.Printf("App Port: %s\n", Cfg.App.Port)
+	fmt.Printf("Encryption Salt: %d\n", Cfg.App.Encryption.Salt)
+	fmt.Printf("JWT Secret: %s\n", Cfg.App.Encryption.JWTSecret)
+
+	// Cetak DBConfig
+	fmt.Printf("DB Host: %s\n", Cfg.DB.Host)
+	fmt.Printf("DB Port: %s\n", Cfg.DB.Port)
+	fmt.Printf("DB Name: %s\n", Cfg.DB.Name)
+	fmt.Printf("DB User: %s\n", Cfg.DB.User)
+	fmt.Printf("DB Password: %s\n", Cfg.DB.Password)
+	fmt.Printf("DB Connection Pool: %+v\n", Cfg.DB.ConnectionPool)
+
+	// Cetak connection pool details
+	fmt.Printf("Max Idle Connection: %d\n", Cfg.DB.ConnectionPool.MaxIdleConnection)
+	fmt.Printf("Max Open Connection: %d\n", Cfg.DB.ConnectionPool.MaxOpenConnection)
+	fmt.Printf("Max Lifetime Connection: %d\n", Cfg.DB.ConnectionPool.MaxLifetimeConnection)
+	fmt.Printf("Max Idle Time Connection: %d\n", Cfg.DB.ConnectionPool.MaxIdletimeConnection)
+
 	return nil
 }
