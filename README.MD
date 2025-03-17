@@ -231,3 +231,237 @@ Proyek ini dilisensikan di bawah **MIT License**. Lihat file LICENSE untuk detai
 
 Selamat Menggunakan **Ecommerce Basic API**! 🚀
 
+# Ecommerce API Documentation
+
+## Authentication Module
+
+### Register
+**Method:** `POST`
+**Endpoint:** `/auth/register`
+**Request Body:**
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+**Response:**
+```json
+{
+  "success": true,
+  "message": "register success"
+}
+```
+
+### Login
+**Method:** `POST`
+**Endpoint:** `/auth/login`
+**Request Body:**
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+**Response:**
+```json
+{
+  "success": true,
+  "message": "login success",
+  "access_token": "your_jwt_token_here"
+}
+```
+
+## Product Module
+
+### Create Product (Admin Only)
+**Method:** `POST`
+**Endpoint:** `/products`
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+**Request Body:**
+```json
+{
+  "name": "Baju Baru",
+  "stock": 10,
+  "price": 100000
+}
+```
+**Response:**
+```json
+{
+  "message": "create product success"
+}
+```
+
+### Get List Products
+**Method:** `GET`
+**Endpoint:** `/products`
+**Query Parameters:**
+```
+cursor=0
+size=10
+```
+**Response:**
+```json
+{
+  "message": "get list products success",
+  "payload": [
+    {
+      "id": 1,
+      "sku": "a98dcf06-7b4b-4f33-a6d2-20738bb8081b",
+      "name": "Baju Baru",
+      "stock": 10,
+      "price": 100000
+    }
+  ],
+  "query": {
+    "cursor": 0,
+    "size": 10
+  }
+}
+```
+
+### Get Product Detail
+**Method:** `GET`
+**Endpoint:** `/products/sku/:sku`
+**Response:**
+```json
+{
+  "message": "get product detail success",
+  "payload": {
+    "id": 1,
+    "sku": "a98dcf06-7b4b-4f33-a6d2-20738bb8081b",
+    "name": "Baju Baru",
+    "stock": 10,
+    "price": 100000,
+    "created_at": "2023-10-01T00:00:00Z",
+    "updated_at": "2023-10-01T00:00:00Z"
+  }
+}
+```
+
+### Update Product (Admin Only)
+**Method:** `PUT`
+**Endpoint:** `/products/:id`
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+**Request Body:**
+```json
+{
+  "name": "Baju Updated",
+  "stock": 20,
+  "price": 150000
+}
+```
+**Response:**
+```json
+{
+  "message": "update product success"
+}
+```
+
+### Delete Product (Admin Only)
+**Method:** `DELETE`
+**Endpoint:** `/products/:id`
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+**Response:**
+```json
+{
+  "message": "delete product success"
+}
+```
+
+## Transaction Module
+
+### Create Transaction
+**Method:** `POST`
+**Endpoint:** `/transactions/checkout`
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+**Request Body:**
+```json
+{
+  "product_sku": "a98dcf06-7b4b-4f33-a6d2-20738bb8081b",
+  "amount": 2
+}
+```
+**Response:**
+```json
+{
+  "message": "create transactions success"
+}
+```
+
+### Get Transaction Histories by User
+**Method:** `GET`
+**Endpoint:** `/transactions/user/histories`
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+**Response:**
+```json
+{
+  "message": "get transaction histories success",
+  "payload": []
+}
+```
+
+### Update Transaction Status
+**Method:** `PUT`
+**Endpoint:** `/transactions/status`
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+**Request Body:**
+```json
+{
+  "trx_id": 1,
+  "new_status": 10
+}
+```
+**Response:**
+```json
+{
+  "message": "update transaction status success"
+}
+```
+
+### Get Transaction Histories by Product
+**Method:** `GET`
+**Endpoint:** `/transactions/product/:sku/histories`
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+**Response:**
+```json
+{
+  "message": "get transaction histories by product success",
+  "payload": []
+}
+```
+
+## Testing API in Postman
+1. Buat Collection di Postman dengan nama *Ecommerce API*.
+2. Buat Environment untuk menyimpan variabel seperti `base_url` dan `token`.
+3. Tambahkan Request untuk setiap endpoint di atas.
+4. Simpan Token setelah login untuk digunakan di endpoint yang memerlukan autentikasi.
+5. Jalankan setiap request dan pastikan response sesuai dengan yang diharapkan.
+
+## Troubleshooting
+- Pastikan database sudah terisi dengan data yang sesuai.
+- Query SQL sudah benar dan sesuai dengan struktur database.
+- Pastikan token JWT valid dan disertakan di header untuk endpoint yang memerlukan autentikasi.
+
